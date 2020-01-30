@@ -1,7 +1,12 @@
 public class Command_Case {
     public static Courser courser_original = new Courser();
+    public static String Copy_Text = "";
 
     public static void Delete_To_end_term() {
+        Piece temp_piece2 = Vim.Current_Piece.next_piece;
+        if (courser_original.position == Vim.Current_Piece.length)
+            if (temp_piece2 == null)
+                return;
         int temp_pos = courser_original.position;
         Piece temp_piece = Vim.Current_Piece;
         Courser.increase_courser(courser_original);
@@ -14,12 +19,13 @@ public class Command_Case {
                 Vim.original_text = sb.toString();
             }
             if (Vim.Current_Piece.type.equals(Piece_Type.add)) {
-                sb = new StringBuilder(Vim.add);
+                sb = new StringBuilder(Vim.add_text);
                 sb.deleteCharAt(place - 1);
-                Vim.add = sb.toString();
+                Vim.add_text = sb.toString();
             }
             Vim.Current_Piece.length--;
             Vim.Current_Piece.end--;
+            temp_piece2 = Vim.Current_Piece.next_piece;
             if (Vim.Current_Piece.length == 0) {
                 Piece temp = Vim.Current_Piece.next_piece;
                 Vim.piece_table.remove(Vim.Current_Piece);
@@ -29,13 +35,41 @@ public class Command_Case {
                     break;
             }
             if (courser_original.position > Vim.Current_Piece.length) {
-                if (Vim.Current_Piece.next_piece != null) {
-                    Vim.Current_Piece = Vim.Current_Piece.next_piece;
+                if (temp_piece2 != null) {
+                    Vim.Current_Piece = temp_piece2;
                     courser_original.position = 1;
                 } else {
                     break;
                 }
             }
+        }
+        Vim.Current_Piece = temp_piece;
+        Command_Case.courser_original.position = temp_pos;
+    }
+
+    public static void Copy() {
+        Copy_Text = "";
+        int temp_pos = courser_original.position;
+        Piece temp_piece = Vim.Current_Piece;
+        Courser.First_of_term(courser_original);
+        Courser.increase_courser(courser_original);
+        if (courser_original.position == 0) {
+            Courser.increase_courser(courser_original);
+        }
+        char current_char = Vim.Current_Piece.text().charAt(courser_original.position - 1);
+        while (current_char != '\n') {
+            Copy_Text += Character.toString(current_char);
+            courser_original.position++;
+            if (courser_original.position > Vim.Current_Piece.length) {
+                if (Vim.Current_Piece.next_piece != null) {
+                    Vim.Current_Piece = Vim.Current_Piece.next_piece;
+                    courser_original.position = 1;
+                } else {
+                    courser_original.position--;
+                    break;
+                }
+            }
+            current_char = Vim.Current_Piece.text().charAt(courser_original.position - 1);
         }
         Vim.Current_Piece = temp_piece;
         Command_Case.courser_original.position = temp_pos;
@@ -48,8 +82,17 @@ public class Command_Case {
                 break;
             case "DD":
                 Courser.First_of_term(courser_original);
-                Courser.decrease_courser(courser_original);
                 Delete_To_end_term();
+                break;
+            case "Y":
+                Copy();
+                System.out.println("C: " + Copy_Text);
+                break;
+            case "P":
+                Insert_Case.Insert(Copy_Text);
+                break;
+            case "V":
+                statistics.init();
                 break;
 
         }

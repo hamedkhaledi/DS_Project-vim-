@@ -186,10 +186,27 @@ public class Courser {
             case "2":
                 Down(courser);
                 break;
+            default:
+                if (input.matches(":" + "[0-9]+")) {
+                    StringBuilder sb;
+                    sb = new StringBuilder(input);
+                    sb.deleteCharAt(0);
+                    int input_num = Integer.parseInt(sb.toString());
+                    courser.position = 0;
+                    Vim.Current_Piece = Vim.piece_table.First_Piece;
+                    increase_courser(courser);
+                    for (int i = 0; i < input_num - 1; i++) {
+                        End_of_term(courser);
+                        increase_courser(courser);
+                    }
+                    decrease_courser(courser);
+                }
+                break;
         }
+
     }
 
-
 }
+
 //TODo end file ????
 // slm\nkhbi\nare mersi\nto khobi\nmnm khbobam che khbr\nhich jer

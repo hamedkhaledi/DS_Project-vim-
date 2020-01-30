@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Vim {
     public static Type Current_Type = Type.command;
     public static String original_text = "hhi";
-    public static String add = "";
+    public static String add_text = "";
     public static Piece_Table piece_table;
     public static Piece Current_Piece;
 
@@ -33,25 +33,27 @@ public class Vim {
             Piece temp_piece = Vim.Current_Piece;
             Current_Piece = piece_table.First_Piece;
             Command_Case.courser_original.position = 0;
-            while (true) {
-                Command_Case.courser_original.position++;
-                if (Command_Case.courser_original.position > Vim.Current_Piece.length) {
-                    if (Vim.Current_Piece.next_piece != null) {
-                        Vim.Current_Piece = Vim.Current_Piece.next_piece;
-                        Command_Case.courser_original.position = 1;
-                    } else {
-                        Command_Case.courser_original.position--;
-                        break;
+            if (Vim.Current_Piece != null) {
+                while (true) {
+                    Command_Case.courser_original.position++;
+                    if (Command_Case.courser_original.position > Vim.Current_Piece.length) {
+                        if (Vim.Current_Piece.next_piece != null) {
+                            Vim.Current_Piece = Vim.Current_Piece.next_piece;
+                            Command_Case.courser_original.position = 1;
+                        } else {
+                            Command_Case.courser_original.position--;
+                            break;
+                        }
                     }
+                    char current_char = Vim.Current_Piece.text().charAt(Command_Case.courser_original.position - 1);
+                    System.out.print(current_char);
+                    if (Command_Case.courser_original.position == temp_pos && Current_Piece == temp_piece)
+                        System.out.print("*");
                 }
-                char current_char = Vim.Current_Piece.text().charAt(Command_Case.courser_original.position - 1);
-                System.out.print(current_char);
-                if (Command_Case.courser_original.position == temp_pos && Current_Piece == temp_piece)
-                    System.out.print("*");
+                System.out.println();
+                Command_Case.courser_original.position = temp_pos;
+                Current_Piece = temp_piece;
             }
-            System.out.println();
-            Command_Case.courser_original.position = temp_pos;
-            Current_Piece = temp_piece;
         }
         //
     }

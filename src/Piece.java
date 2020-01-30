@@ -14,8 +14,8 @@ public class Piece {
         this.type = type;
 //        if (type.equals(Piece_Type.original))
 //            text = Vim.original_text.substring(start, end);
-//        if (type.equals(Piece_Type.add))
-//            text = Vim.add.substring(start, end);
+//        if (type.equals(Piece_Type.add_text))
+//            text = Vim.add_text.substring(start, end);
 
     }
 
@@ -24,7 +24,7 @@ public class Piece {
         if (this.type.equals(Piece_Type.original))
             text = Vim.original_text.substring(this.start, this.end);
         if (this.type.equals(Piece_Type.add))
-            text = Vim.add.substring(this.start, this.end);
+            text = Vim.add_text.substring(this.start, this.end);
         return text;
     }
 }

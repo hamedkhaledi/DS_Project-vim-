@@ -14,6 +14,7 @@ public class Piece_Table {
                 previous.next_piece = piece;
             } else {
                 piece.next_piece = First_Piece;
+                First_Piece.previous_piece = piece;
                 First_Piece = piece;
                 piece.previous_piece = null;
             }
