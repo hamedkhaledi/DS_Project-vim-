@@ -1,7 +1,7 @@
-public class Courser {
+class Courser {
     int position;
 
-    public static void increase_courser(Courser courser) {
+    static void increase_courser(Courser courser) {
         courser.position++;
         if (courser.position > Vim.Current_Piece.length) {
             if (Vim.Current_Piece.next_piece != null) {
@@ -12,7 +12,7 @@ public class Courser {
         }
     }
 
-    public static void decrease_courser(Courser courser) {
+    private static void decrease_courser(Courser courser) {
         courser.position--;
         if (courser.position <= 0) {
             if (Vim.Current_Piece.previous_piece != null) {
@@ -23,7 +23,7 @@ public class Courser {
         }
     }
 
-    public static void First_of_term(Courser courser) {
+    static void First_of_term(Courser courser) {
         while (courser.position != 0 && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position--;
             if (courser.position <= 0) {
@@ -39,8 +39,8 @@ public class Courser {
 
     }
 
-    public static void End_of_term(Courser courser) {
-        if (courser.position == 0)
+    private static void End_of_term(Courser courser) {
+        if (courser.position <= 0)
             increase_courser(courser);
         while (Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position++;
@@ -56,18 +56,18 @@ public class Courser {
         }
     }
 
-    public static void First_of_file(Courser courser) {
+    private static void First_of_file(Courser courser) {
         courser.position = 0;
         Vim.Current_Piece = Vim.piece_table.First_Piece;
     }
 
-    public static void End_of_file(Courser courser) {
+    private static void End_of_file(Courser courser) {
         Vim.Current_Piece = Vim.piece_table.Last_Piece;
         courser.position = Vim.Current_Piece.length;
 
     }
 
-    public static void First_of_word(Courser courser) {
+    private static void First_of_word(Courser courser) {
         while (courser.position != 0 && Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position--;
             if (courser.position <= 0) {
@@ -82,8 +82,10 @@ public class Courser {
         }
     }
 
-    public static void End_of_word(Courser courser) {
+    private static void End_of_word(Courser courser) {
         if (courser.position == 0)
+            increase_courser(courser);
+        if (Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n')
             increase_courser(courser);
         while (Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position++;
@@ -99,7 +101,7 @@ public class Courser {
         }
     }
 
-    public static void Down(Courser courser) {
+    private static void Down(Courser courser) {
         int counter = 0;
         while (courser.position != 0 && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             counter++;
@@ -126,7 +128,7 @@ public class Courser {
     }
 
 
-    public static void Up(Courser courser) {
+    private static void Up(Courser courser) {
         int counter = 0;
         while (courser.position != 0 && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             counter++;
@@ -146,13 +148,15 @@ public class Courser {
         while (counter > 0) {
             counter--;
             increase_courser(courser);
-            if (Vim.Current_Piece.text().charAt(courser.position - 1) == '\n')
+            if (Vim.Current_Piece.text().charAt(courser.position - 1) == '\n') {
+                decrease_courser(courser);
                 break;
+            }
 
         }
     }
 
-    public static void Courser_Move(String input, Courser courser) {
+    static void Courser_Move(String input, Courser courser) {
         switch (input) {
             case ">":
                 increase_courser(courser);
@@ -208,5 +212,5 @@ public class Courser {
 
 }
 
-//TODo end file ????
+
 // slm\nkhbi\nare mersi\nto khobi\nmnm khbobam che khbr\nhich jer
