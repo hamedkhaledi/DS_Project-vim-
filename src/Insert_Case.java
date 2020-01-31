@@ -6,7 +6,7 @@ class Insert_Case {
         } else {
             if (input.equals(">") || input.equals("<") || input.equals("2") || input.equals("8"))
                 Courser.Courser_Move(input, Command_Case.courser_original);
-            else {
+            else if (input.length() > 0) {
                 Piece original1;
                 if (Command_Case.courser_original.position > 0) {
                     original1 = new Piece(Vim.Current_Piece.start, Vim.Current_Piece.start + Command_Case.courser_original.position, Vim.Current_Piece.type);

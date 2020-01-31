@@ -2,7 +2,7 @@ import java.util.Scanner;
 
 public class Vim {
     static Type Current_Type = Type.command;
-    static String original_text = "hhi";
+    static String original_text = "hi\nwelcome to my vim";
     static String add_text = "";
     static Piece_Table piece_table;
     static Piece Current_Piece;

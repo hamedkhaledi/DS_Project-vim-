@@ -59,64 +59,68 @@ class Command_Case {
 
         }
         if (input.matches("/" + ".*")) {
-            // create input
-            StringBuilder sb;
-            sb = new StringBuilder(input);
-            sb.deleteCharAt(0);
-            input = sb.toString();
-            //
-            int line = 1;
-            int counter = 0;
-            int temp_pos = courser_original.position;
-            Piece temp_piece = Vim.Current_Piece;
-            courser_original.position = 0;
-            Vim.Current_Piece = Vim.piece_table.First_Piece;
-            //
-            Trie_Table temp = new Trie_Table();
-            temp.root = new TrieNode();
-            StringBuilder str = new StringBuilder();
-            while (true) {
-                courser_original.position++;
-                if (courser_original.position > Vim.Current_Piece.length) {
-                    if (Vim.Current_Piece.next_piece != null) {
-                        Vim.Current_Piece = Vim.Current_Piece.next_piece;
-                        courser_original.position = 1;
-                    } else {
-                        temp.insert(str.toString());
-                        if (temp.search(input)) {
-                            System.out.print(" Line : " + line + "  ");
-                            counter++;
-                        }
-                        courser_original.position--;
-                        break;
-                    }
-                }
-                char current_char = Vim.Current_Piece.text().charAt(courser_original.position - 1);
-                if (current_char != ' ' && current_char != '\n')
-                    str.append(current_char);
-                else {
-                    temp.insert(str.toString());
-                    str = new StringBuilder();
-                }
-                if (current_char == '\n') {
-                    if (temp.search(input)) {
-                        System.out.print("Line : " + line);
-                        counter++;
-                    }
-                    line++;
-                    temp = new Trie_Table();
-                    temp.root = new TrieNode();
-                    str = new StringBuilder();
-                }
-            }
-            System.out.println("\nnumbers: " + counter);
-            courser_original.position = temp_pos;
-            Vim.Current_Piece = temp_piece;
+            input = Search(input);
         }
         if (input.equals("i")) {
             Vim.Current_Type = Type.insert;
         } else
             Courser.Courser_Move(input, courser_original);
+    }
+
+    private static String Search(String input) {
+        StringBuilder sb;
+        sb = new StringBuilder(input);
+        sb.deleteCharAt(0);
+        input = sb.toString();
+        //
+        int line = 1;
+        int counter = 0;
+        int temp_pos = courser_original.position;
+        Piece temp_piece = Vim.Current_Piece;
+        courser_original.position = 0;
+        Vim.Current_Piece = Vim.piece_table.First_Piece;
+        //
+        Trie_Table temp = new Trie_Table();
+        temp.root = new TrieNode();
+        StringBuilder str = new StringBuilder();
+        while (true) {
+            courser_original.position++;
+            if (courser_original.position > Vim.Current_Piece.length) {
+                if (Vim.Current_Piece.next_piece != null) {
+                    Vim.Current_Piece = Vim.Current_Piece.next_piece;
+                    courser_original.position = 1;
+                } else {
+                    temp.insert(str.toString());
+                    if (temp.search(input)) {
+                        System.out.print(" Line : " + line + "  ");
+                        counter++;
+                    }
+                    courser_original.position--;
+                    break;
+                }
+            }
+            char current_char = Vim.Current_Piece.text().charAt(courser_original.position - 1);
+            if (current_char != ' ' && current_char != '\n')
+                str.append(current_char);
+            else {
+                temp.insert(str.toString());
+                str = new StringBuilder();
+            }
+            if (current_char == '\n') {
+                if (temp.search(input)) {
+                    System.out.print("Line : " + line);
+                    counter++;
+                }
+                line++;
+                temp = new Trie_Table();
+                temp.root = new TrieNode();
+                str = new StringBuilder();
+            }
+        }
+        System.out.println("\nnumbers: " + counter);
+        courser_original.position = temp_pos;
+        Vim.Current_Piece = temp_piece;
+        return input;
     }
 
 
