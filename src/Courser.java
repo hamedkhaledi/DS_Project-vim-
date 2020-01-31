@@ -42,6 +42,8 @@ class Courser {
     private static void End_of_term(Courser courser) {
         if (courser.position <= 0)
             increase_courser(courser);
+        if (Vim.Current_Piece.text().charAt(courser.position - 1) == '\n')
+            increase_courser(courser);
         while (Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position++;
             if (courser.position > Vim.Current_Piece.length) {
@@ -68,7 +70,9 @@ class Courser {
     }
 
     private static void First_of_word(Courser courser) {
-        while (courser.position != 0 && Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
+        while (courser.position > 0 && (Vim.Current_Piece.text().charAt(courser.position - 1) == ' ' || Vim.Current_Piece.text().charAt(courser.position - 1) == '\n'))
+            decrease_courser(courser);
+        while (courser.position != 0 && (Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n')) {
             courser.position--;
             if (courser.position <= 0) {
                 if (Vim.Current_Piece.previous_piece != null) {
@@ -85,7 +89,7 @@ class Courser {
     private static void End_of_word(Courser courser) {
         if (courser.position == 0)
             increase_courser(courser);
-        if (Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n')
+        while (courser.position > 0 && (Vim.Current_Piece.text().charAt(courser.position - 1) == ' ' || Vim.Current_Piece.text().charAt(courser.position - 1) == '\n'))
             increase_courser(courser);
         while (Vim.Current_Piece.text().charAt(courser.position - 1) != ' ' && Vim.Current_Piece.text().charAt(courser.position - 1) != '\n') {
             courser.position++;
@@ -181,7 +185,6 @@ class Courser {
                 break;
             case "b":
                 First_of_word(courser);
-                decrease_courser(courser);
                 First_of_word(courser);
                 break;
             case "8":
@@ -201,9 +204,26 @@ class Courser {
                     increase_courser(courser);
                     for (int i = 0; i < input_num - 1; i++) {
                         End_of_term(courser);
-                        increase_courser(courser);
                     }
-                    decrease_courser(courser);
+
+                }
+                if (input.matches("[0-9]+" + "w")) {
+                    StringBuilder sb;
+                    sb = new StringBuilder(input);
+                    sb.deleteCharAt(sb.length() - 1);
+                    int input_num = Integer.parseInt(sb.toString());
+                    for (int i = 0; i < input_num; i++) {
+                        End_of_word(courser);
+                    }
+                }
+                if (input.matches("[0-9]+" + "b")) {
+                    StringBuilder sb;
+                    sb = new StringBuilder(input);
+                    sb.deleteCharAt(sb.length() - 1);
+                    int input_num = Integer.parseInt(sb.toString());
+                    for (int i = 0; i < input_num; i++) {
+                        First_of_word(courser);
+                    }
                 }
                 break;
         }
